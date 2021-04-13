@@ -725,6 +725,7 @@ bool Arch::getBudgetOverride(const NetInfo *net_info, const PortRef &sink, delay
 bool Arch::pack()
 {
     decode_lut_cells();
+    pack_chains();
     merge_constant_nets();
     pack_ports();
     return true;
@@ -767,6 +768,8 @@ bool Arch::place()
         cfg.spread_scale_x = 2;
         cfg.spread_scale_y = 1;
         cfg.solverTolerance = 0.6e-6;
+        // We should detect here components
+        //
         if (!placer_heap(getCtx(), cfg))
             return false;
     } else if (placer == "sa") {
@@ -1440,6 +1443,44 @@ void Arch::decode_lut_cells()
         cell->lut_cell.equation.resize(1 << cell->lut_cell.pins.size());
 
         cell->lut_cell.equation = cell_parameters.parse_int_like(getCtx(), cell->type, equation_parameter, equation);
+    }
+}
+
+void Arch::pack_chains()
+{
+    for (auto &cell_pair : cells) {
+        CellInfo *cell = cell_pair.second.get();
+
+        log_info("--------------------------------------------------------------\n");
+        log_info("Cell %s ", cell->name.c_str(this));
+        if (cell->constr_parent == nullptr) {
+            log_info("no parent ---\n");
+        } else {
+            log_info("parent: %s\n", cell->constr_parent->name.c_str(this));
+        }
+        log_info("--------------------------------------------------------------\n");
+
+
+        //auto iter = lut_cells.find(cell->type);
+        //if (iter == lut_cells.end()) {
+        //    cell->lut_cell.pins.clear();
+        //    cell->lut_cell.equation.clear();
+        //    continue;
+        //}
+
+        //const LutCellPOD &lut_cell = *iter->second;
+
+        //cell->lut_cell.pins.reserve(lut_cell.input_pins.size());
+        //for (uint32_t pin : lut_cell.input_pins) {
+        //    cell->lut_cell.pins.push_back(IdString(pin));
+        //    cell->lut_cell.lut_pins.emplace(IdString(pin));
+        //}
+
+        //IdString equation_parameter(lut_cell.parameter);
+        //const Property &equation = cell->params.at(equation_parameter);
+        //cell->lut_cell.equation.resize(1 << cell->lut_cell.pins.size());
+
+        //cell->lut_cell.equation = cell_parameters.parse_int_like(getCtx(), cell->type, equation_parameter, equation);
     }
 }
 

@@ -115,7 +115,7 @@ function(generate_xc7_device_db)
         device ${device}
         patch_name constraints
         patch_path constraints
-        patch_format yaml
+        patch_format pyyaml
         patch_data ${PYTHON_INTERCHANGE_PATH}/test_data/series7_constraints.yaml
         input_device ${rapidwright_device}
         output_target constraints_device
@@ -126,7 +126,7 @@ function(generate_xc7_device_db)
         device ${device}
         patch_name constraints-luts
         patch_path lutDefinitions
-        patch_format yaml
+        patch_format pyyaml
         patch_data ${PYTHON_INTERCHANGE_PATH}/test_data/series7_luts.yaml
         input_device ${constraints_device}
         output_target constraints_luts_device

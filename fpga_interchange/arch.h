@@ -686,6 +686,7 @@ struct Arch : ArchAPI<ArchRanges>
                       std::unordered_set<CellInfo *> *placed_cells);
     void pack_ports();
     void decode_lut_cells();
+    void pack_chains();
     bool pack() final;
     bool place() final;
     bool route() final;

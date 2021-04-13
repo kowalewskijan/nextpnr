@@ -287,7 +287,9 @@ bool DedicatedInterconnect::is_sink_on_net_valid(BelId bel, const CellInfo *cell
 
         auto iter = sinks.find(type_bel_pin);
         if (iter == sinks.end()) {
-            // This BEL pin doesn't have a dedicate interconnect.
+            if (ctx->debug) {
+                log_info("BEL %s doesn't have sinks!\n", ctx->nameOfBel(bel));
+            }
             continue;
         }
 
